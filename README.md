@@ -11,3 +11,4 @@ Currently MVI is love for all the Android guys out there and everyone is trying 
 This repo could be a great help to those.
 
 I would like to welcome folks who thinks can improve the codebase and introduce more tight-elegant way to implement MVI.
+
