@@ -7,6 +7,8 @@ import retrofit2.http.GET
 
 /**
  * A Sayan Porya code on 2020-02-08
+ *
+ * Retrofit Api Service
  */
 interface WebService {
   @WorkerThread

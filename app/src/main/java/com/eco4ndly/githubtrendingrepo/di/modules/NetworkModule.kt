@@ -1,6 +1,7 @@
 package com.eco4ndly.githubtrendingrepo.di.modules
 
 import com.eco4ndly.githubtrendingrepo.BuildConfig
+import com.eco4ndly.githubtrendingrepo.data.api.WebService
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,9 +21,10 @@ val networkModule = module {
     single { provideHttpLoggingInterceptor() }
     single { provideOkHttpClient(get()) }
     single { provideRetrofit(get(), get()) }
+    single { provideWebApi(get()) }
 }
 
-fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
+private fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
     return OkHttpClient.Builder()
         .addInterceptor(logger)
         .connectTimeout(15, TimeUnit.SECONDS)
@@ -31,7 +33,7 @@ fun provideOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         .build()
 }
 
-fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+private fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
     val interceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
         override fun log(message: String) {
             Timber.d(message)
@@ -46,7 +48,7 @@ fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
     return interceptor
 }
 
-fun provideRetrofit(okHttpClient: OkHttpClient, moshiFactory: Moshi): Retrofit {
+private fun provideRetrofit(okHttpClient: OkHttpClient, moshiFactory: Moshi): Retrofit {
     return Retrofit.Builder()
         .baseUrl("https://github-trending-api.now.sh/")
         .addConverterFactory(MoshiConverterFactory.create(moshiFactory))
@@ -54,6 +56,10 @@ fun provideRetrofit(okHttpClient: OkHttpClient, moshiFactory: Moshi): Retrofit {
         .build()
 }
 
-fun provideMoshi(): Moshi {
+private fun provideWebApi(retrofit: Retrofit): WebService {
+    return retrofit.create(WebService::class.java)
+}
+
+private fun provideMoshi(): Moshi {
     return Moshi.Builder().build()
 }

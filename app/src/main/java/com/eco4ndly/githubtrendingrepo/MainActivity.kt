@@ -3,6 +3,9 @@ package com.eco4ndly.githubtrendingrepo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
+/**
+ * A Sayan Porya code on 11/05/2020
+ */
 class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
