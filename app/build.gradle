@@ -51,12 +51,10 @@ dependencies {
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 
   // Koin AndroidX Scope feature
+  implementation "org.koin:koin-core:$koin_version"
+  implementation "org.koin:koin-android:$koin_version"
   implementation "org.koin:koin-androidx-scope:$koin_version"
-
-  // Koin AndroidX ViewModel feature
   implementation "org.koin:koin-androidx-viewmodel:$koin_version"
-
-  // Koin AndroidX Fragment Factory (unstable version)
   implementation "org.koin:koin-androidx-fragment:$koin_version"
 
   implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -72,4 +70,5 @@ dependencies {
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'androidx.test.ext:junit:1.1.1'
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+  testImplementation "org.koin:koin-test:$koin_version"
 }
