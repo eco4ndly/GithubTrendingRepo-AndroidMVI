@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.infra.event.Event
@@ -34,8 +35,7 @@ import java.lang.RuntimeException
  *
  * @param Intent This represents user actions from view to viewmodel
  */
-abstract class BaseViewModel<ViewState, ViewEffect, Intent>(application: Application) :
-    AndroidViewModel(application) {
+abstract class BaseViewModel<ViewState, ViewEffect, Intent> : ViewModel() {
 
   private val viewStateMutableLD = MutableLiveData<ViewState>()
 
@@ -66,7 +66,7 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent>(application: Applica
 
   /**
    * Current View Effect
-   */
+   *//*
   @FlowPreview
   @ExperimentalCoroutinesApi
   protected var viewEffect: ViewEffect? = null
@@ -78,7 +78,15 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent>(application: Applica
         //viewEffectSingleLiveEvent.value = Event(value) //to the live data
         viewEffectChannel.safeOffer(it) //to flow
       }
-    }
+    }*/
+  /**
+   * Dispatches view effect to the view
+   */
+  protected fun dispatchViewEffect(viewEffect: ViewEffect) {
+    Timber.d("setting viewEffect : $viewEffect")
+    //viewEffectSingleLiveEvent.value = Event(value) //to the live data
+    viewEffectChannel.safeOffer(viewEffect) //to flow
+  }
 
   @ExperimentalCoroutinesApi
   private val viewEffectChannel = ConflatedBroadcastChannel<ViewEffect>()

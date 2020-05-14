@@ -2,7 +2,9 @@ package com.eco4ndly.githubtrendingrepo
 
 import com.eco4ndly.githubtrendingrepo.data.api.WebService
 import com.eco4ndly.githubtrendingrepo.di.modules.networkModule
+import com.eco4ndly.githubtrendingrepo.main.module.mainActivityModule
 import org.junit.Test
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
 import org.koin.core.logger.Level
 import org.koin.test.AutoCloseKoinTest
@@ -18,7 +20,7 @@ class KoinModuleTest: AutoCloseKoinTest() {
     fun `koin module test`() {
         koinApplication {
             printLogger(Level.DEBUG)
-            modules(listOf(networkModule))
+            modules(listOf(networkModule, mainActivityModule))
         }.checkModules()
     }
 }

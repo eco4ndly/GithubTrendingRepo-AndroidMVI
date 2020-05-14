@@ -2,6 +2,7 @@ package com.eco4ndly.githubtrendingrepo.app
 
 import android.app.Application
 import com.eco4ndly.githubtrendingrepo.di.modules.networkModule
+import com.eco4ndly.githubtrendingrepo.main.module.mainActivityModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -20,7 +21,7 @@ class GithubTrendingRepoApp: Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@GithubTrendingRepoApp)
-            module { networkModule }
+            modules(listOf(networkModule, mainActivityModule))
         }
     }
 }

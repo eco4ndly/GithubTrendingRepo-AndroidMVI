@@ -1,8 +1,14 @@
 package com.eco4ndly.githubtrendingrepo.base
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
 /**
@@ -20,11 +26,26 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
    */
   abstract val viewModel: AppViewModel
 
+  protected lateinit var mainScope : CoroutineScope
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    mainScope = MainScope()
+  }
+
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
     viewModel.getViewStateLiveData().observe(viewLifecycleOwner, viewStateObserver)
-    viewModel.getViewEffectLiveDate().observe(viewLifecycleOwner, viewEffectObserver)
+    //viewModel.getViewEffectLiveDate().observe(viewLifecycleOwner, viewEffectObserver)
+    viewModel.viewEffectFlow.onEach {
+      renderViewEffect(it)
+    }.launchIn(mainScope)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    mainScope.cancel()
   }
 
   private val viewStateObserver = Observer<ViewState> {
