@@ -73,7 +73,7 @@ fun View.clicks(): Flow<Unit> = callbackFlow {
 }
 
 @ExperimentalCoroutinesApi
-private fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
+fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
   offer(value)
 } catch (t: Throwable) {
   // Ignore all
