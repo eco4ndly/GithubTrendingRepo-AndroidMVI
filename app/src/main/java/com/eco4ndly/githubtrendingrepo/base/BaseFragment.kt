@@ -6,8 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
@@ -27,14 +30,19 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
    */
   abstract val viewModel: AppViewModel
 
+  @ExperimentalCoroutinesApi
+  @FlowPreview
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
-    viewModel.getViewStateLiveData().observe(viewLifecycleOwner, viewStateObserver)
-    //viewModel.getViewEffectLiveDate().observe(viewLifecycleOwner, viewEffectObserver)
-    viewModel.viewEffectFlow.onEach {
-      renderViewEffect(it)
-    }.launchIn(lifecycleScope)
+    lifecycleScope.launchWhenStarted {
+      viewModel.getViewStateLiveData().observe(viewLifecycleOwner, viewStateObserver)
+    }
+    lifecycleScope.launchWhenStarted {
+      viewModel.viewEffectFlow.onEach {
+        renderViewEffect(it)
+      }.collect()
+    }
   }
 
   private val viewStateObserver = Observer<ViewState> {

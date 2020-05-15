@@ -23,7 +23,7 @@ import timber.log.Timber
  * @see [BaseViewModel] to know about [ViewState] [ViewEffect] [Intent]
  */
 abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseViewModel<ViewState, ViewEffect, Intent>> :
-    AppCompatActivity() {
+  AppCompatActivity() {
 
   /**
    * The viewmodel instance
@@ -34,11 +34,15 @@ abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
   @FlowPreview
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    viewModel.getViewStateLiveData().observe(this, viewStateObserver)
-    //viewModel.getViewEffectLiveDate().observe(this, viewEffectObserver)
-    viewModel.viewEffectFlow.onEach { effect ->
-      renderViewEffect(effect)
-    }.launchIn(lifecycleScope)
+    lifecycleScope.launchWhenStarted {
+      viewModel.getViewStateLiveData().observe(this@BaseActivity, viewStateObserver)
+    }
+    lifecycleScope.launchWhenStarted {
+      viewModel.viewEffectFlow
+        .onEach { effect ->
+          renderViewEffect(effect)
+        }.collect()
+    }
   }
 
   private val viewStateObserver = Observer<ViewState> {
