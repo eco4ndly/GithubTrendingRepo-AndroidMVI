@@ -1,24 +1,17 @@
 package com.eco4ndly.githubtrendingrepo.base
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.infra.event.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.RuntimeException
 
@@ -35,19 +28,22 @@ import java.lang.RuntimeException
  *
  * @param Intent This represents user actions from view to viewmodel
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
 abstract class BaseViewModel<ViewState, ViewEffect, Intent> : ViewModel() {
 
   private val viewStateMutableLD = MutableLiveData<ViewState>()
+  private val _viewEffectChannel = BroadcastChannel<ViewEffect>(capacity = Channel.BUFFERED)
 
   /**
    * Exposes the [ViewState] live data
    */
-  fun getViewStateLiveData(): LiveData<ViewState> = viewStateMutableLD
+  val viewState: LiveData<ViewState> get() = viewStateMutableLD
 
   /**
    * Current View state
    */
-  protected var viewState: ViewState? = null
+  protected var viewStateStore: ViewState? = null
     get() = field ?: throw RuntimeException("Trying to access View State before initialization")
     set(value) {
       value?.let {
@@ -57,43 +53,15 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent> : ViewModel() {
       }
     }
 
-  private val viewEffectSingleLiveEvent = MutableLiveData<Event<ViewEffect>>()
-
-  /**
-   * Exposes the View Effect live data
-   */
-  fun getViewEffectLiveDate(): LiveData<Event<ViewEffect>> = viewEffectSingleLiveEvent
-
-  /**
-   * Current View Effect
-   *//*
-  @FlowPreview
-  @ExperimentalCoroutinesApi
-  protected var viewEffect: ViewEffect? = null
-    get() = field ?: throw RuntimeException("Trying to access View Effects before initialization")
-    set(value) {
-      value?.let {
-        Timber.d("setting viewEffect : $value")
-        field = value
-        //viewEffectSingleLiveEvent.value = Event(value) //to the live data
-        viewEffectChannel.safeOffer(it) //to flow
-      }
-    }*/
   /**
    * Dispatches view effect to the view
    */
   protected fun dispatchViewEffect(viewEffect: ViewEffect) {
     Timber.d("setting viewEffect : $viewEffect")
-    //viewEffectSingleLiveEvent.value = Event(value) //to the live data
-    viewEffectChannel.safeOffer(viewEffect) //to flow
+    _viewEffectChannel.safeOffer(viewEffect) //to flow
   }
 
-  @ExperimentalCoroutinesApi
-  private val viewEffectChannel = ConflatedBroadcastChannel<ViewEffect>()
-
-  @FlowPreview
-  @ExperimentalCoroutinesApi
-  val viewEffectFlow: Flow<ViewEffect> get() = viewEffectChannel.asFlow()
+  val viewEffect: Flow<ViewEffect> get() = _viewEffectChannel.asFlow()
 
   /**
    * Place where we'll be handling user actions as intents
@@ -102,6 +70,6 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent> : ViewModel() {
 
   override fun onCleared() {
     super.onCleared()
-    viewEffectChannel.cancel()
+    _viewEffectChannel.cancel()
   }
 }

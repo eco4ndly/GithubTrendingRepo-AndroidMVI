@@ -7,12 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import com.eco4ndly.githubtrendingrepo.infra.event.EventObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
@@ -35,10 +31,10 @@ abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     lifecycleScope.launchWhenStarted {
-      viewModel.getViewStateLiveData().observe(this@BaseActivity, viewStateObserver)
+      viewModel.viewState.observe(this@BaseActivity, viewStateObserver)
     }
     lifecycleScope.launchWhenStarted {
-      viewModel.viewEffectFlow
+      viewModel.viewEffect
         .onEach { effect ->
           renderViewEffect(effect)
         }.collect()

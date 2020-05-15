@@ -1,17 +1,12 @@
 package com.eco4ndly.githubtrendingrepo.base
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
@@ -36,10 +31,10 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
     super.onActivityCreated(savedInstanceState)
 
     lifecycleScope.launchWhenStarted {
-      viewModel.getViewStateLiveData().observe(viewLifecycleOwner, viewStateObserver)
+      viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
     }
     lifecycleScope.launchWhenStarted {
-      viewModel.viewEffectFlow.onEach {
+      viewModel.viewEffect.onEach {
         renderViewEffect(it)
       }.collect()
     }
