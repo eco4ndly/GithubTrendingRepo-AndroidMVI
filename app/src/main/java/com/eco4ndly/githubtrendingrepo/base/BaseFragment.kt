@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -26,13 +27,6 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
    */
   abstract val viewModel: AppViewModel
 
-  protected lateinit var mainScope : CoroutineScope
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    mainScope = MainScope()
-  }
-
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
@@ -40,12 +34,7 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
     //viewModel.getViewEffectLiveDate().observe(viewLifecycleOwner, viewEffectObserver)
     viewModel.viewEffectFlow.onEach {
       renderViewEffect(it)
-    }.launchIn(mainScope)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    mainScope.cancel()
+    }.launchIn(lifecycleScope)
   }
 
   private val viewStateObserver = Observer<ViewState> {

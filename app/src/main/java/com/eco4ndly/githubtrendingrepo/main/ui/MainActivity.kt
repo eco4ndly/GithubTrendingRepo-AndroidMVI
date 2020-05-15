@@ -2,6 +2,7 @@ package com.eco4ndly.githubtrendingrepo.main.ui
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.eco4ndly.githubtrendingrepo.base.BaseActivity
 import com.eco4ndly.githubtrendingrepo.common.extensions.clicks
 import com.eco4ndly.githubtrendingrepo.common.extensions.exhaustive
@@ -37,7 +38,7 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
 
     mab.testTxt.clicks().onEach {
       viewModel.processIntent(ShowToastIntent)
-    }.launchIn(mainScope)
+    }.launchIn(lifecycleScope)
   }
 
   override fun renderViewState(viewState: MainState) {

@@ -59,6 +59,9 @@ dependencies {
 
   implementation 'com.jakewharton.timber:timber:4.7.1'
 
+  // lifecycleScope
+  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha02'
+
   //retrofit
   implementation 'com.squareup.retrofit2:retrofit:2.7.1'
   implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
