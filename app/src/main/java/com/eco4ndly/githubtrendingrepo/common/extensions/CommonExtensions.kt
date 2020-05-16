@@ -1,5 +1,8 @@
 package com.eco4ndly.githubtrendingrepo.common.extensions
 
+import android.content.Context
+import android.widget.Toast
+
 /**
  * A Sayan Porya code on 14/05/20
  *
@@ -13,3 +16,6 @@ package com.eco4ndly.githubtrendingrepo.common.extensions
  */
 val <T> T.exhaustive: T
   get() = this
+
+
+fun Context.toast(text: CharSequence) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()

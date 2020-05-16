@@ -5,10 +5,11 @@ package com.eco4ndly.githubtrendingrepo.main
  */
 
 data class MainState (
-  val theText: String
+  val theText: String,
+  val charCount: Int
 ) {
   companion object {
-    fun initial() = MainState(theText = "Initial")
+    fun initial() = MainState(theText = "Click Here", charCount = 0)
   }
 }
 
@@ -32,5 +33,13 @@ sealed class MainIntent {
    */
   object ShowToastIntent: MainIntent()
 
-  data class CounterIntent(val count: Int): MainIntent()
+  /**
+   * TextView Click count Intent
+   */
+  data class ClickCountIntent(val count: Int): MainIntent()
+
+  /**
+   * Intent to count the character present in the typed sentence
+   */
+  data class CharCountIntent(val text: String): MainIntent()
 }

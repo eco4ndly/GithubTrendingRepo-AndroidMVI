@@ -59,9 +59,9 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewSt
   }
 
   /**
-   *
+   * use this function to reduce a new state
    */
-  protected fun newState(reducer: ViewState.() -> ViewState) = stateReducer.offer(reducer)
+  protected fun newState(reducer: ViewState.() -> ViewState) = stateReducer.safeOffer(reducer)
 
   /**
    * Dispatches view effect to the view
@@ -79,6 +79,7 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewSt
   override fun onCleared() {
     super.onCleared()
     effectDispatcher.cancel()
+    stateReducer.cancel()
   }
 
   protected fun <T: Intent>Flow<T>.logIntent(): Flow<T> {

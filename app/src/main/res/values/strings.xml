@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">Github Trending Repo - MVI</string>
+  <string name="count">Count</string>
+  <string name="type_anything">Type Anything....</string>
 </resources>

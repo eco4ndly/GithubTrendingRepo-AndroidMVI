@@ -13,11 +13,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 
 /**
  * A Sayan Porya code on 14/05/20
@@ -47,9 +44,12 @@ class MainViewModel(
   private fun Flow<MainIntent>.toMainState(): Flow<MainIntent> {
     return onEach {
       when(it) {
-        is MainIntent.CounterIntent -> {
+        is MainIntent.ClickCountIntent -> {
           newState { copy(theText = "Count ${it.count}") }
           dispatchViewEffect(ToastEffect("Clicked"))
+        }
+        is MainIntent.CharCountIntent -> {
+          newState { copy(charCount = it.text.length) }
         }
       }
     }

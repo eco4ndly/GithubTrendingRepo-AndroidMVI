@@ -1,6 +1,10 @@
 package com.eco4ndly.githubtrendingrepo.common.extensions
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
+import androidx.annotation.CheckResult
 import com.eco4ndly.githubtrendingrepo.common.Utils
 import com.eco4ndly.githubtrendingrepo.data.api.ApiResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -70,6 +74,32 @@ fun View.clicks(): Flow<Unit> = callbackFlow {
   awaitClose {
     setOnClickListener(null)
   }
+}
+
+/**
+ * Flow conversion of edittext text changes
+ * `````Usage``````
+ *  val editText = EditText
+ *  editText
+ *    .textChanges()
+ *    .collect { charSeq ->
+ *
+ *    }
+ */
+@ExperimentalCoroutinesApi
+@CheckResult
+fun EditText.textChanges(): Flow<CharSequence?> {
+  return callbackFlow<CharSequence?> {
+    val listener = object : TextWatcher {
+      override fun afterTextChanged(s: Editable?) = Unit
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        safeOffer(s)
+      }
+    }
+    addTextChangedListener(listener)
+    awaitClose { removeTextChangedListener(listener) }
+  }.onStart { emit(text) }
 }
 
 @ExperimentalCoroutinesApi
