@@ -10,6 +10,7 @@ import com.eco4ndly.githubtrendingrepo.common.extensions.exhaustive
 import com.eco4ndly.githubtrendingrepo.common.extensions.textChanges
 import com.eco4ndly.githubtrendingrepo.common.extensions.toast
 import com.eco4ndly.githubtrendingrepo.databinding.ActivityMainBinding
+import com.eco4ndly.githubtrendingrepo.infra.ViewIntentFlow
 import com.eco4ndly.githubtrendingrepo.main.MainEffect
 import com.eco4ndly.githubtrendingrepo.main.MainEffect.ToastEffect
 import com.eco4ndly.githubtrendingrepo.main.MainIntent
@@ -17,7 +18,10 @@ import com.eco4ndly.githubtrendingrepo.main.MainState
 import com.eco4ndly.githubtrendingrepo.main.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
@@ -30,7 +34,7 @@ import org.koin.core.parameter.parametersOf
  */
 @FlowPreview
 @ExperimentalCoroutinesApi
-class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewModel>() {
+class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewModel>(), ViewIntentFlow<MainIntent> {
 
   private val mab: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -43,7 +47,7 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
     super.onCreate(savedInstanceState)
     setContentView(mab.root)
 
-    intents().onEach {
+    viewIntent().onEach {
       viewModel.processIntent(it)
     }.launchIn(lifecycleScope)
   }
@@ -61,8 +65,12 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
     }.exhaustive
   }
 
-  private fun intents() = merge(
-    mab.testTxt.clicks().map { MainIntent.ClickCountIntent(counterVal++) },
-    mab.etText.textChanges().debounce(300).map { MainIntent.CharCountIntent(it?.toString()?:"") }
-  )
+  override fun viewIntent(): Flow<MainIntent> {
+    val intents = listOf(
+      mab.testTxt.clicks().map { MainIntent.ClickCountIntent(counterVal++) },
+      mab.etText.textChanges().debounce(300).map { MainIntent.CharCountIntent(it?.toString()?:"") }
+    )
+
+    return intents.asFlow().flattenMerge(intents.size)
+  }
 }

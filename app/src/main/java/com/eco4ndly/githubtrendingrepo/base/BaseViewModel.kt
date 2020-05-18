@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
+import com.eco4ndly.githubtrendingrepo.infra.ViewIntentFlow
 import com.eco4ndly.githubtrendingrepo.infra.event.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -35,12 +36,13 @@ import timber.log.Timber
  */
 @FlowPreview
 @ExperimentalCoroutinesApi
-abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewState) : ViewModel() {
+abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewState) : ViewModel(), ViewIntentFlow<Intent> {
 
   private val viewStateMutableLD = MutableLiveData<ViewState>()
 
   private val stateReducer = BroadcastChannel<ViewState.() -> ViewState>(capacity = Channel.BUFFERED)
   private val effectDispatcher = BroadcastChannel<ViewEffect>(capacity = Channel.BUFFERED)
+  private val intentChannel = ConflatedBroadcastChannel<Intent>()
 
   val viewEffect: Flow<ViewEffect> get() = effectDispatcher.asFlow()
 
@@ -72,17 +74,25 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewSt
   }
 
   /**
-   * Place where we'll be handling user actions as intents
+   * View will call this function to submit intent it want to be processed
+   * [BaseViewModel] children will use [viewIntent] method to get the intent flow
    */
-  abstract fun processIntent(intent: Intent)
+  fun processIntent(intent: Intent) {
+    intentChannel.safeOffer(intent)
+  }
+
+  override fun viewIntent(): Flow<Intent> {
+    return intentChannel.asFlow().logIntent()
+  }
 
   override fun onCleared() {
     super.onCleared()
     effectDispatcher.cancel()
     stateReducer.cancel()
+    intentChannel.cancel()
   }
 
-  protected fun <T: Intent>Flow<T>.logIntent(): Flow<T> {
+  private fun <T: Intent>Flow<T>.logIntent(): Flow<T> {
     return onEach {
       Timber.d("#Commanding Intent $it")
     }

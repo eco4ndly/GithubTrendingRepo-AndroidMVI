@@ -13,8 +13,10 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 /**
  * A Sayan Porya code on 14/05/20
@@ -23,23 +25,14 @@ import kotlinx.coroutines.flow.onEach
 @ExperimentalCoroutinesApi
 class MainViewModel(
   initialState: MainState,
-  trendingRepoRepository: TrendingRepoRepository
+  private val trendingRepoRepository: TrendingRepoRepository
 ) : BaseViewModel<MainState, MainEffect, MainIntent>(initialState) {
 
-  private val _intentChannel = ConflatedBroadcastChannel<MainIntent>()
-
   init {
-    _intentChannel
-      .asFlow()
-      .logIntent()
+    viewIntent()
       .toMainState()
       .launchIn(viewModelScope)
   }
-
-  override fun processIntent(intent: MainIntent) {
-    _intentChannel.safeOffer(intent)
-  }
-
 
   private fun Flow<MainIntent>.toMainState(): Flow<MainIntent> {
     return onEach {
