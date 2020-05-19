@@ -102,6 +102,9 @@ fun EditText.textChanges(): Flow<CharSequence?> {
   }.onStart { emit(text) }
 }
 
+/**
+ * wrapper over the offer method
+ */
 @ExperimentalCoroutinesApi
 fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
   offer(value)

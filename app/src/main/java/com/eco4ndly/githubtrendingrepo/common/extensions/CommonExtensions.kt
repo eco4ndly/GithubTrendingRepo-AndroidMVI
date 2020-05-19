@@ -17,5 +17,7 @@ import android.widget.Toast
 val <T> T.exhaustive: T
   get() = this
 
-
+/**
+ * Toasting in android is easier like never before
+ */
 fun Context.toast(text: CharSequence) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()

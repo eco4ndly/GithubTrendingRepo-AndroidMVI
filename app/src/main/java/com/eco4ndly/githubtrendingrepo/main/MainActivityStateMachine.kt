@@ -9,6 +9,9 @@ data class MainState (
   val charCount: Int
 ) {
   companion object {
+    /**
+     * The initial state of the [.MainActivity]
+     */
     fun initial() = MainState(theText = "Click Here", charCount = 0)
   }
 }
