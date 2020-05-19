@@ -9,5 +9,8 @@ import kotlinx.coroutines.flow.Flow
  * a single flow
  */
 interface ViewIntentFlow<Intent> {
+  /**
+   * Will return merged the intent flows
+   */
   fun viewIntent(): Flow<Intent>
 }
