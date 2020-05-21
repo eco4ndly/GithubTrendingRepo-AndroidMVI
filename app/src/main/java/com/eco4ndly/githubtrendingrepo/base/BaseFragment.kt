@@ -30,9 +30,7 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
    * The Viewmodel
    */
   abstract val viewModel: AppViewModel
-
-  @ExperimentalCoroutinesApi
-  @FlowPreview
+  
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
