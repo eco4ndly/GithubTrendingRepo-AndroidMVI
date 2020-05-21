@@ -1,6 +1,10 @@
 package com.eco4ndly.githubtrendingrepo.base
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +21,8 @@ import timber.log.Timber
  *
  * @see [BaseViewModel] to know about [ViewState] [ViewEffect] [Intent]
  */
+@ExperimentalCoroutinesApi
+@FlowPreview
 abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseViewModel<ViewState, ViewEffect, Intent>> :
     Fragment() {
 
@@ -38,7 +44,18 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
         renderViewEffect(it)
       }.collect()
     }
+
+    takeOff(savedInstanceState)
   }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(layoutResId(), container, false)
+  }
+
 
   private val viewStateObserver = Observer<ViewState> {
     Timber.d("current state $it")
@@ -59,4 +76,15 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
    * Sub classes will implement this method to render view effects
    */
   abstract fun renderViewEffect(viewEffect: ViewEffect)
+
+  /**
+   * gets the layout res from its child to build the view in [onCreateView]
+   */
+  @LayoutRes
+  abstract fun layoutResId(): Int
+
+  /**
+   *from where children should start
+   */
+  abstract fun takeOff(savedInstanceState: Bundle?)
 }

@@ -6,7 +6,7 @@ apply plugin: 'koin'
 
 android {
   compileSdkVersion 29
-  buildToolsVersion "29.0.2"
+  buildToolsVersion "29.0.3"
 
   defaultConfig {
     applicationId "com.eco4ndly.githubtrendingrepo"
@@ -60,7 +60,7 @@ dependencies {
   implementation 'com.jakewharton.timber:timber:4.7.1'
 
   // lifecycleScope
-  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha02'
+  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha03'
 
   //retrofit
   implementation 'com.squareup.retrofit2:retrofit:2.8.1'
