@@ -13,5 +13,5 @@ import retrofit2.http.GET
 interface WebService {
   @WorkerThread
   @GET("/repositories")
-  suspend fun getTrendingRepos(): Response<List<RepoModel>>
+  suspend fun getTrendingRepos(): List<RepoModel>
 }

@@ -2,21 +2,15 @@ package com.eco4ndly.githubtrendingrepo.main.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.base.BaseViewModel
-import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
-import com.eco4ndly.githubtrendingrepo.domain.TrendingRepoRepository
 import com.eco4ndly.githubtrendingrepo.main.MainEffect
 import com.eco4ndly.githubtrendingrepo.main.MainEffect.ToastEffect
 import com.eco4ndly.githubtrendingrepo.main.MainIntent
 import com.eco4ndly.githubtrendingrepo.main.MainState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 /**
  * A Sayan Porya code on 14/05/20

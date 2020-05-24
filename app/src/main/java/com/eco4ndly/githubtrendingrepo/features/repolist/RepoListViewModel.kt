@@ -1,8 +1,7 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist
 
-import androidx.lifecycle.ViewModel
 import com.eco4ndly.githubtrendingrepo.base.BaseViewModel
-import com.eco4ndly.githubtrendingrepo.domain.TrendingRepoRepository
+import com.eco4ndly.githubtrendingrepo.domain.data.TrendingRepoRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 

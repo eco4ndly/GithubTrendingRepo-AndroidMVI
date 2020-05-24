@@ -1,7 +1,7 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist.di
 
 import com.eco4ndly.githubtrendingrepo.data.repositories.TrendingRepoRepositoryImpl
-import com.eco4ndly.githubtrendingrepo.domain.TrendingRepoRepository
+import com.eco4ndly.githubtrendingrepo.domain.data.TrendingRepoRepository
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListState
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

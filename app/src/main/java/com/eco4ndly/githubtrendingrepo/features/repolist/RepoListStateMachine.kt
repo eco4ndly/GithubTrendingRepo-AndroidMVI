@@ -32,4 +32,9 @@ sealed class RepoListEffect
 /**
  * Intents od [RepoListFragment]
  */
-sealed class RepoListIntent
+sealed class RepoListIntent {
+  /**
+   * Fetches the list of trending repository
+   */
+  object FetchTrendingRepo: RepoListIntent()
+}
