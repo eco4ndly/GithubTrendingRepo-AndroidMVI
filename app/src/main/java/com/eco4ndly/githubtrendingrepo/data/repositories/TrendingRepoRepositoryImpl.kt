@@ -21,9 +21,7 @@ class TrendingRepoRepositoryImpl(private val webService: WebService) : TrendingR
     override suspend fun getTrendingRepositoryList(): Flow<ApiResult<List<RepoModel>>> {
         return flow {
             emit(webService.getTrendingRepos().getResultAndValidate())
-        }
-            .applyCommonStuffs()
-            .flowOn(Dispatchers.IO)
+        }.applyCommonStuffs()
     }
 
     /**

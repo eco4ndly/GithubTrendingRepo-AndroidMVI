@@ -7,6 +7,8 @@ import android.widget.EditText
 import androidx.annotation.CheckResult
 import com.eco4ndly.githubtrendingrepo.common.Utils
 import com.eco4ndly.githubtrendingrepo.data.api.ApiResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.SendChannel
@@ -28,7 +30,7 @@ import java.io.IOException
  *  - Emitting error at the end as exhaust
  */
 @ExperimentalCoroutinesApi
-fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs() =
+fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs(dispatcher: CoroutineDispatcher = Dispatchers.IO) =
   retryWhen { cause, attempt ->
     when {
       (cause is IOException && attempt < Utils.MAX_RETRIES) -> {
@@ -46,6 +48,7 @@ fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs() =
           Timber.e(exception)
           emit(ApiResult.Error(exception))
       }
+    .flowOn(dispatcher)
 
 /**
  * Cancelling job if active
