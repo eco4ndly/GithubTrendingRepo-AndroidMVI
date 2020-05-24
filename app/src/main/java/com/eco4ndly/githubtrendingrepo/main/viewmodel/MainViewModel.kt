@@ -24,8 +24,7 @@ import kotlinx.coroutines.launch
 @FlowPreview
 @ExperimentalCoroutinesApi
 class MainViewModel(
-  initialState: MainState,
-  private val trendingRepoRepository: TrendingRepoRepository
+  initialState: MainState
 ) : BaseViewModel<MainState, MainEffect, MainIntent>(initialState) {
 
   init {
