@@ -1,6 +1,7 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist
 
 import com.eco4ndly.githubtrendingrepo.data.entities.RepoModel
+import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 
 /**
  * A Sayan Porya code on 21/05/20
@@ -10,7 +11,7 @@ import com.eco4ndly.githubtrendingrepo.data.entities.RepoModel
  * States for [RepoListFragment]
  */
 data class RepoListState(
-  val repoList: List<RepoModel>,
+  val repoList: List<RepoUiModel>,
   val hasError: Boolean,
   val message: String
 ) {
