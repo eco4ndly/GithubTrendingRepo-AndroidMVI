@@ -46,10 +46,11 @@
       tools:text="Repo Description"
       />
   <LinearLayout
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:id="@+id/ll_icon_holder"
       app:layout_constraintTop_toBottomOf="@id/tv_repo_description"
+      app:layout_constraintHorizontal_bias="0.0"
       android:layout_marginTop="8dp"
       android:layout_marginBottom="8dp"
       android:layout_marginStart="4dp"
@@ -93,6 +94,27 @@
           />
       <TextView
           android:id="@+id/tv_star_count"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="@color/gray_light"
+          tools:text="400"
+          android:layout_marginStart="4dp"
+          />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginStart="12dp"
+        >
+      <ImageView
+          android:layout_width="16dp"
+          android:layout_height="16dp"
+          android:src="@drawable/ic_github_fork"
+          />
+      <TextView
+          android:id="@+id/tv_fork_count"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textColor="@color/gray_light"

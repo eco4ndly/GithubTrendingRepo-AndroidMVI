@@ -40,4 +40,26 @@
       app:layout_constraintTop_toTopOf="parent"
       />
 
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:orientation="horizontal"
+      >
+  <Button
+      android:id="@+id/accept"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Accept"
+      />
+    <Button
+        android:id="@+id/reject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reject"
+        />
+  </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

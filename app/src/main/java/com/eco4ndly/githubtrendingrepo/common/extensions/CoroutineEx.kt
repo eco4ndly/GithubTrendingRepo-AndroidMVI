@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import java.io.IOException
+import kotlin.reflect.KClass
 
 /**
  * A Sayan Porya code on 2020-02-08
@@ -114,4 +115,10 @@ fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
 } catch (t: Throwable) {
   // Ignore all
   false
+}
+
+inline fun <reified T> Flow<*>.ofType(): Flow<*> {
+  return takeWhile {
+    it is T
+  }
 }

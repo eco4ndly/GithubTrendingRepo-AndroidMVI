@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.eco4ndly.githubtrendingrepo.base.BaseActivity
 import com.eco4ndly.githubtrendingrepo.common.extensions.clicks
 import com.eco4ndly.githubtrendingrepo.common.extensions.exhaustive
+import com.eco4ndly.githubtrendingrepo.common.extensions.ofType
 import com.eco4ndly.githubtrendingrepo.common.extensions.textChanges
 import com.eco4ndly.githubtrendingrepo.common.extensions.toast
 import com.eco4ndly.githubtrendingrepo.databinding.ActivityMainBinding
@@ -18,6 +19,7 @@ import com.eco4ndly.githubtrendingrepo.main.MainState
 import com.eco4ndly.githubtrendingrepo.main.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
@@ -26,8 +28,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 /**
  * A Sayann Porya code on 11/05/2020
@@ -40,6 +44,8 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
 
   override val viewModel: MainViewModel by viewModel { parametersOf(MainState.initial()) }
 
+  private val channel = ConflatedBroadcastChannel<Any>()
+
   @VisibleForTesting
   private var counterVal = 0
 
@@ -50,6 +56,21 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
     viewIntent().onEach {
       viewModel.processIntent(it)
     }.launchIn(lifecycleScope)
+
+    channel
+      .asFlow()
+      .ofType<ActionAccept>()
+      .onEach {
+      Timber.d("Accepted $it")
+    }.launchIn(lifecycleScope)
+
+    mab.accept.setOnClickListener {
+      channel.offer(ActionAccept())
+    }
+
+    mab.reject.setOnClickListener {
+      channel.offer(ActionReject())
+    }
   }
 
   override fun renderViewState(viewState: MainState) {
@@ -74,3 +95,6 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
     return intents.asFlow().flattenMerge(intents.size)
   }
 }
+
+class ActionAccept
+class ActionReject
