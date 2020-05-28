@@ -1,6 +1,5 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist
 
-import com.eco4ndly.githubtrendingrepo.data.entities.RepoModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 
 /**
@@ -13,14 +12,15 @@ import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 data class RepoListState(
   val repoList: List<RepoUiModel>,
   val hasError: Boolean,
-  val message: String
+  val errorMessage: String,
+  val isLoadingList: Boolean
 ) {
   companion object {
     val initial
       get() = RepoListState(
         repoList = emptyList(),
         hasError = false,
-        message = "Fetching List..."
+        isLoadingList = false
       )
   }
 }
