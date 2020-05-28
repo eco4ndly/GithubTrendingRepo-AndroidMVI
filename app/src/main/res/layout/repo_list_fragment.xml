@@ -19,5 +19,9 @@
       app:layout_constraintTop_toTopOf="parent"
       tools:listitem="@layout/layout_repo_item"
       />
+  <ProgressBar
+      android:id="@+id/pb_list_load"
+      android:layout_width="50dp"
+      android:layout_height="50dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
