@@ -6,6 +6,8 @@ import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -23,7 +25,7 @@ class RepoListFragment : BaseFragment<RepoListState, RepoListEffect, RepoListInt
 
   }
 
-  override fun renderViewEffect(viewEffect: RepoListEffect) {
+  override fun showViewEffect(viewEffect: RepoListEffect) {
 
   }
 
@@ -31,6 +33,10 @@ class RepoListFragment : BaseFragment<RepoListState, RepoListEffect, RepoListInt
 
   override fun takeOff(savedInstanceState: Bundle?) {
 
+  }
+
+  override fun viewIntent(): Flow<RepoListIntent> {
+    return flow {  }
   }
 
 }

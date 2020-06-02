@@ -1,7 +1,6 @@
 package com.eco4ndly.githubtrendingrepo.main.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.lifecycleScope
 import com.eco4ndly.githubtrendingrepo.base.BaseActivity
@@ -10,7 +9,6 @@ import com.eco4ndly.githubtrendingrepo.common.extensions.exhaustive
 import com.eco4ndly.githubtrendingrepo.common.extensions.textChanges
 import com.eco4ndly.githubtrendingrepo.common.extensions.toast
 import com.eco4ndly.githubtrendingrepo.databinding.ActivityMainBinding
-import com.eco4ndly.githubtrendingrepo.infra.ViewIntentFlow
 import com.eco4ndly.githubtrendingrepo.main.MainEffect
 import com.eco4ndly.githubtrendingrepo.main.MainEffect.ToastEffect
 import com.eco4ndly.githubtrendingrepo.main.MainIntent
@@ -34,7 +32,7 @@ import org.koin.core.parameter.parametersOf
  */
 @FlowPreview
 @ExperimentalCoroutinesApi
-class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewModel>(), ViewIntentFlow<MainIntent> {
+class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewModel>() {
 
   private val mab: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -57,7 +55,7 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
     mab.tvCharCount.text = viewState.charCount.toString()
   }
 
-  override fun renderViewEffect(viewEffect: MainEffect) {
+  override fun showViewEffect(viewEffect: MainEffect) {
     when (viewEffect) {
       is ToastEffect -> {
         toast(viewEffect.message)
