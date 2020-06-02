@@ -1,8 +1,6 @@
-package com.eco4ndly.githubtrendingrepo.features.repolist
+package com.eco4ndly.githubtrendingrepo.features.repolist.ui
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
@@ -10,6 +8,10 @@ import com.eco4ndly.githubtrendingrepo.common.extensions.gone
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
 import com.eco4ndly.githubtrendingrepo.common.extensions.showMessageDialog
 import com.eco4ndly.githubtrendingrepo.common.extensions.visible
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListIntent
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListState
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListViewModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.adapter.RepoLisDiffCallback
 import com.eco4ndly.githubtrendingrepo.features.repolist.adapter.RepositoryListItem
 import com.eco4ndly.githubtrendingrepo.widgets.ItemAdapter
@@ -32,21 +34,28 @@ class RepoListFragment :
   }
 
   companion object {
-    fun newInstance() = RepoListFragment()
+    const val TAG = "RepoListFragment"
+    fun newInstance() =
+      RepoListFragment()
   }
 
-  override val viewModel: RepoListViewModel by viewModel { parametersOf(RepoListState.initial) }
+  override val viewModel: RepoListViewModel by viewModel { parametersOf(
+    RepoListState.initial
+  ) }
 
   override fun renderViewState(viewState: RepoListState) {
-    if (viewState.hasError) {
-      showMessageDialog(viewState.errorMessage)
-      return
-    }
 
     if (viewState.isLoadingList) {
       pb_list_load.visible()
     } else {
       pb_list_load.gone()
+    }
+
+    if (viewState.hasError) {
+      viewState.errorMessage?.let {
+        showMessageDialog(it)
+      }
+      return
     }
 
     if (viewState.repoList.isNotEmpty()) {

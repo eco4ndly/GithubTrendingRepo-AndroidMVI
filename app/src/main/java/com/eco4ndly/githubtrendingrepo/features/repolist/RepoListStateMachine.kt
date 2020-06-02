@@ -12,7 +12,7 @@ import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 data class RepoListState(
   val repoList: List<RepoUiModel>,
   val hasError: Boolean,
-  val errorMessage: String,
+  val errorMessage: String?,
   val isLoadingList: Boolean
 ) {
   companion object {
@@ -20,7 +20,8 @@ data class RepoListState(
       get() = RepoListState(
         repoList = emptyList(),
         hasError = false,
-        isLoadingList = false
+        isLoadingList = true,
+        errorMessage = null
       )
   }
 }

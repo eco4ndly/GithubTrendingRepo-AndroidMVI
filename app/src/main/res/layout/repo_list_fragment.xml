@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray_dark"
-    tools:context=".features.repolist.RepoListFragment"
+    tools:context=".features.repolist.ui.RepoListFragment"
     >
 
   <androidx.recyclerview.widget.RecyclerView
@@ -21,7 +21,12 @@
       />
   <ProgressBar
       android:id="@+id/pb_list_load"
-      android:layout_width="50dp"
-      android:layout_height="50dp"/>
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
