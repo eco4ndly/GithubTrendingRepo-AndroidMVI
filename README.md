@@ -12,3 +12,7 @@ This repo could be a great help to those.
 
 I would like to welcome folks who thinks can improve the codebase and introduce more tight-elegant way to implement MVI.
 
+#### What you get from here?
+  - How to Implement MVI using Kotlin Coroutine Flow
+  - How to leverage the power of Kotlin to use recycler view
+

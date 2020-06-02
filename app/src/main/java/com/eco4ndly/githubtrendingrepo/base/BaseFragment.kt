@@ -24,7 +24,7 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 @FlowPreview
 abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseViewModel<ViewState, ViewEffect, Intent>> :
-    Fragment() {
+    Fragment(), BaseScreenContract<ViewState, ViewEffect, Intent> {
 
   /**
    * The Viewmodel
@@ -39,7 +39,7 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
     }
     lifecycleScope.launchWhenStarted {
       viewModel.viewEffect.onEach {
-        renderViewEffect(it)
+        showViewEffect(it)
       }.collect()
     }
 
@@ -62,18 +62,8 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
 
   private val viewEffectObserver = Observer<ViewEffect> {
     Timber.d("current effect $it")
-    renderViewEffect(it)
+    showViewEffect(it)
   }
-
-  /**
-   * Sub classes will implement this method to render view states
-   */
-  abstract fun renderViewState(viewState: ViewState)
-
-  /**
-   * Sub classes will implement this method to render view effects
-   */
-  abstract fun renderViewEffect(viewEffect: ViewEffect)
 
   /**
    * gets the layout res from its child to build the view in [onCreateView]

@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
-import com.eco4ndly.githubtrendingrepo.infra.ViewIntentFlow
-import com.eco4ndly.githubtrendingrepo.infra.event.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -15,7 +13,6 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
@@ -36,7 +33,7 @@ import timber.log.Timber
  */
 @FlowPreview
 @ExperimentalCoroutinesApi
-abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewState) : ViewModel(), ViewIntentFlow<Intent> {
+abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewState) : ViewModel() {
 
   private val viewStateMutableLD = MutableLiveData<ViewState>()
 
@@ -81,7 +78,7 @@ abstract class BaseViewModel<ViewState, ViewEffect, Intent>(initialState: ViewSt
     intentChannel.safeOffer(intent)
   }
 
-  override fun viewIntent(): Flow<Intent> {
+  protected fun viewIntent(): Flow<Intent> {
     return intentChannel.asFlow().logIntent()
   }
 
