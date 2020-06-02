@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.repo_list_fragment.pb_list_load
 import kotlinx.android.synthetic.main.repo_list_fragment.rv_repo_list
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -63,7 +65,7 @@ class RepoListFragment :
     }
   }
 
-  override fun renderViewEffect(viewEffect: RepoListEffect) {
+  override fun showViewEffect(viewEffect: RepoListEffect) {
 
   }
 
@@ -72,6 +74,10 @@ class RepoListFragment :
   override fun takeOff(savedInstanceState: Bundle?) {
     pb_list_load.gone()
     rv_repo_list.setUpBasicList(repoListAdapter)
+  }
+
+  override fun viewIntent(): Flow<RepoListIntent> {
+    return flow {  }
   }
 
 }

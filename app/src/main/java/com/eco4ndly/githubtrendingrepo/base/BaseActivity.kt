@@ -19,7 +19,7 @@ import timber.log.Timber
  * @see [BaseViewModel] to know about [ViewState] [ViewEffect] [Intent]
  */
 abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseViewModel<ViewState, ViewEffect, Intent>> :
-  AppCompatActivity() {
+  AppCompatActivity(), BaseScreenContract<ViewState, ViewEffect, Intent> {
 
   /**
    * The viewmodel instance
@@ -36,7 +36,7 @@ abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
     lifecycleScope.launchWhenStarted {
       viewModel.viewEffect
         .onEach { effect ->
-          renderViewEffect(effect)
+          showViewEffect(effect)
         }.collect()
     }
   }
@@ -48,16 +48,6 @@ abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
 
   private val viewEffectObserver = EventObserver<ViewEffect> {
     Timber.d("current effect $it")
-    renderViewEffect(it)
+    showViewEffect(it)
   }
-
-  /**
-   * Sub classes will implement this method to render view states
-   */
-  abstract fun renderViewState(viewState: ViewState)
-
-  /**
-   * Sub classes will implement this method to render view effects
-   */
-  abstract fun renderViewEffect(viewEffect: ViewEffect)
 }
