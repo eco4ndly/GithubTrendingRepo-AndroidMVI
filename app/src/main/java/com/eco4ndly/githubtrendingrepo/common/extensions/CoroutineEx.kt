@@ -42,13 +42,12 @@ fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs(dispatcher: CoroutineDispatch
         false
       }
     }
-  }
-      .onStart { emit(ApiResult.Loading(isLoading = true)) }
-      .onCompletion { emit(ApiResult.Loading(isLoading = false)) }
-      .catch { exception ->
-          Timber.e(exception)
-          emit(ApiResult.Error(exception))
-      }
+  }.onStart { emit(ApiResult.Loading(isLoading = true)) }
+    .onCompletion { emit(ApiResult.Loading(isLoading = false)) }
+    .catch { exception ->
+      Timber.e(exception)
+      emit(ApiResult.Error(exception))
+    }
     .flowOn(dispatcher)
 
 /**
@@ -63,13 +62,13 @@ fun Job?.cancelIfActive() {
 /**
  * **How to use it**
  * @code
-   private val mainScope = MainScope()
-   val btnClick: Button = findViewById(R.id.btn)
-   btnClick.clicks()
-            .onEach {
-                //DO STUFF ON CLICK
-            }
-            .launchIn(mainScope)
+private val mainScope = MainScope()
+val btnClick: Button = findViewById(R.id.btn)
+btnClick.clicks()
+.onEach {
+//DO STUFF ON CLICK
+}
+.launchIn(mainScope)
  */
 @ExperimentalCoroutinesApi
 fun View.clicks(): Flow<Unit> = callbackFlow {

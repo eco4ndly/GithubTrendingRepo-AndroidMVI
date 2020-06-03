@@ -51,10 +51,6 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
     super.onCreate(savedInstanceState)
     setContentView(mab.root)
 
-    viewIntent().onEach {
-      viewModel.processIntent(it)
-    }.launchIn(lifecycleScope)
-
     channel
       .asFlow()
       .ofType<ActionAccept>()

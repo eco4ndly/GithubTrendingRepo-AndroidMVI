@@ -1,15 +1,18 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist.ui
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
 import com.eco4ndly.githubtrendingrepo.common.extensions.gone
+import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
 import com.eco4ndly.githubtrendingrepo.common.extensions.showMessageDialog
 import com.eco4ndly.githubtrendingrepo.common.extensions.visible
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListIntent
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListIntent.FetchTrendingRepo
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListState
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListViewModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.adapter.RepoLisDiffCallback
@@ -19,8 +22,15 @@ import kotlinx.android.synthetic.main.repo_list_fragment.pb_list_load
 import kotlinx.android.synthetic.main.repo_list_fragment.rv_repo_list
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.channels.consume
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,6 +44,8 @@ class RepoListFragment :
       RepoLisDiffCallback()
     )
   }
+
+  private val repoListFetchIntent = ConflatedBroadcastChannel<Unit>()
 
   companion object {
     const val TAG = "RepoListFragment"
@@ -74,10 +86,17 @@ class RepoListFragment :
   override fun takeOff(savedInstanceState: Bundle?) {
     pb_list_load.gone()
     rv_repo_list.setUpBasicList(repoListAdapter)
+
+    lifecycleScope.launchWhenStarted {
+      repoListFetchIntent.safeOffer(Unit)
+    }
   }
 
   override fun viewIntent(): Flow<RepoListIntent> {
-    return flow {  }
+    val intents = listOf(
+      repoListFetchIntent.asFlow().map { FetchTrendingRepo }
+    )
+    return intents.asFlow().flattenMerge(intents.size)
   }
 
 }

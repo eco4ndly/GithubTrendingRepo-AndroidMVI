@@ -7,7 +7,10 @@ import androidx.lifecycle.lifecycleScope
 import com.eco4ndly.githubtrendingrepo.infra.event.EventObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flattenMerge
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
@@ -35,10 +38,10 @@ abstract class BaseActivity<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
     }
     lifecycleScope.launchWhenStarted {
       viewModel.viewEffect
-        .onEach { effect ->
-          showViewEffect(effect)
-        }.collect()
+        .onEach { effect -> showViewEffect(effect) }.collect()
     }
+    viewIntent()
+      .onEach { viewModel.processIntent(it) }.launchIn(lifecycleScope)
   }
 
   private val viewStateObserver = Observer<ViewState> {

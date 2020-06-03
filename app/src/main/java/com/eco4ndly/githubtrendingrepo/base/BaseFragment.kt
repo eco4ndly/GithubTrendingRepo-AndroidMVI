@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
@@ -38,10 +39,11 @@ abstract class BaseFragment<ViewState, ViewEffect, Intent, AppViewModel : BaseVi
       viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
     }
     lifecycleScope.launchWhenStarted {
-      viewModel.viewEffect.onEach {
-        showViewEffect(it)
-      }.collect()
+      viewModel.viewEffect.onEach { showViewEffect(it) }.collect()
     }
+
+    viewIntent()
+      .onEach { viewModel.processIntent(it) }.launchIn(lifecycleScope)
 
     takeOff(savedInstanceState)
   }
