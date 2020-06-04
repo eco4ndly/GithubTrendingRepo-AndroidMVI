@@ -29,13 +29,18 @@ class MainViewModel(
 
   private fun Flow<MainIntent>.toMainState(): Flow<MainIntent> {
     return onEach {
-      when(it) {
+      when (it) {
         is MainIntent.ClickCountIntent -> {
           newState { copy(theText = "Count ${it.count}") }
           dispatchViewEffect(ToastEffect("Clicked"))
         }
         is MainIntent.CharCountIntent -> {
           newState { copy(charCount = it.text.length) }
+        }
+        is MainIntent.NavigationIntent -> {
+          when (it) {
+            is MainIntent.NavigationIntent.ToListActivity -> dispatchViewEffect(MainEffect.NavigationEffect.NavigateListActivity)
+          }
         }
       }
     }

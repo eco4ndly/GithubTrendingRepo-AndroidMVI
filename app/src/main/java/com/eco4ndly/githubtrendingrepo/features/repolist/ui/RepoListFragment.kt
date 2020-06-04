@@ -53,9 +53,7 @@ class RepoListFragment :
       RepoListFragment()
   }
 
-  override val viewModel: RepoListViewModel by viewModel { parametersOf(
-    RepoListState.initial
-  ) }
+  override val viewModel: RepoListViewModel by viewModel { parametersOf(RepoListState.initial) }
 
   override fun renderViewState(viewState: RepoListState) {
 
@@ -86,10 +84,7 @@ class RepoListFragment :
   override fun takeOff(savedInstanceState: Bundle?) {
     pb_list_load.gone()
     rv_repo_list.setUpBasicList(repoListAdapter)
-
-    lifecycleScope.launchWhenStarted {
-      repoListFetchIntent.safeOffer(Unit)
-    }
+    repoListFetchIntent.safeOffer(Unit)
   }
 
   override fun viewIntent(): Flow<RepoListIntent> {

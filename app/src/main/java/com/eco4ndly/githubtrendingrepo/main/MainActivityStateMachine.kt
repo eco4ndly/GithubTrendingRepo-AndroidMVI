@@ -24,6 +24,16 @@ sealed class MainEffect {
    * To show toast
    */
   data class ToastEffect(val message: String) : MainEffect()
+
+  /**
+   * Navigator
+   */
+  sealed class NavigationEffect: MainEffect() {
+    /**
+     * To navigate to the next activity
+     */
+    object NavigateListActivity: NavigationEffect()
+  }
 }
 
 /**
@@ -45,4 +55,8 @@ sealed class MainIntent {
    * Intent to count the character present in the typed sentence
    */
   data class CharCountIntent(val text: String): MainIntent()
+
+  sealed class NavigationIntent: MainIntent() {
+    object ToListActivity: NavigationIntent()
+  }
 }

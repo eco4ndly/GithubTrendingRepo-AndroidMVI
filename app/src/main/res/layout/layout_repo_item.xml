@@ -73,10 +73,10 @@
           android:orientation="horizontal"
           >
         <View
+            android:id="@+id/lang_color"
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:background="@drawable/round_shape"
-            tools:backgroundTint="@color/yellow"
             />
         <TextView
             android:id="@+id/tv_lang_name"
@@ -115,10 +115,10 @@
           android:gravity="center"
           android:orientation="horizontal"
           >
-        <ImageView
+        <View
+            android:id="@+id/iv_fork"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:src="@drawable/ic_github_fork"
             />
         <TextView
             android:id="@+id/tv_fork_count"

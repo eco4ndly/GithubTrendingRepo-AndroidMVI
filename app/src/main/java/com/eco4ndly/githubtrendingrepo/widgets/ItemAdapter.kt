@@ -6,6 +6,8 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.eco4ndly.githubtrendingrepo.common.extensions.ofType
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.asFlow
@@ -19,6 +21,8 @@ import kotlinx.coroutines.flow.sample
  * This can be used as an adapter without making any subclass from it, if u just want
  * basic funcs
  */
+@ExperimentalCoroutinesApi
+@FlowPreview
 open class ItemAdapter<I : ItemAdapter.Item<E>, E>(diffCallBack: DiffUtil.ItemCallback<I>) :
   ListAdapter<I, ItemViewHolder>(diffCallBack) {
 
@@ -35,6 +39,10 @@ open class ItemAdapter<I : ItemAdapter.Item<E>, E>(diffCallBack: DiffUtil.ItemCa
 
   override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
     getItem(position).render(holder, eventChannel)
+  }
+
+  override fun getItemViewType(position: Int): Int {
+    return getItem(position).layoutResId()
   }
 
   /**

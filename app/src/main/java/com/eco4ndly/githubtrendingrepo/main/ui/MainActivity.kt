@@ -1,9 +1,11 @@
 package com.eco4ndly.githubtrendingrepo.main.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.lifecycleScope
 import com.eco4ndly.githubtrendingrepo.base.BaseActivity
+import com.eco4ndly.githubtrendingrepo.base.FragmentContainerActivity
 import com.eco4ndly.githubtrendingrepo.common.extensions.clicks
 import com.eco4ndly.githubtrendingrepo.common.extensions.exhaustive
 import com.eco4ndly.githubtrendingrepo.common.extensions.ofType
@@ -11,8 +13,10 @@ import com.eco4ndly.githubtrendingrepo.common.extensions.textChanges
 import com.eco4ndly.githubtrendingrepo.common.extensions.toast
 import com.eco4ndly.githubtrendingrepo.databinding.ActivityMainBinding
 import com.eco4ndly.githubtrendingrepo.main.MainEffect
+import com.eco4ndly.githubtrendingrepo.main.MainEffect.NavigationEffect
 import com.eco4ndly.githubtrendingrepo.main.MainEffect.ToastEffect
 import com.eco4ndly.githubtrendingrepo.main.MainIntent
+import com.eco4ndly.githubtrendingrepo.main.MainIntent.NavigationIntent
 import com.eco4ndly.githubtrendingrepo.main.MainState
 import com.eco4ndly.githubtrendingrepo.main.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,8 +59,8 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
       .asFlow()
       .ofType<ActionAccept>()
       .onEach {
-      Timber.d("Accepted $it")
-    }.launchIn(lifecycleScope)
+        Timber.d("Accepted $it")
+      }.launchIn(lifecycleScope)
 
     mab.accept.setOnClickListener {
       channel.offer(ActionAccept())
@@ -74,19 +78,30 @@ class MainActivity : BaseActivity<MainState, MainEffect, MainIntent, MainViewMod
 
   override fun showViewEffect(viewEffect: MainEffect) {
     when (viewEffect) {
-      is ToastEffect -> {
-        toast(viewEffect.message)
-      }
-    }.exhaustive
+      is ToastEffect -> toast(viewEffect.message)
+      is NavigationEffect -> handleNavigation(viewEffect)
+    }
   }
 
   override fun viewIntent(): Flow<MainIntent> {
     val intents = listOf(
       mab.testTxt.clicks().map { MainIntent.ClickCountIntent(counterVal++) },
-      mab.etText.textChanges().debounce(300).map { MainIntent.CharCountIntent(it?.toString()?:"") }
+      mab.etText.textChanges().debounce(300)
+        .map { MainIntent.CharCountIntent(it?.toString() ?: "") },
+      mab.btnListActivity.clicks().map { MainIntent.NavigationIntent.ToListActivity }
     )
 
     return intents.asFlow().flattenMerge(intents.size)
+  }
+
+  private fun handleNavigation(navigationEffect: NavigationEffect) {
+    when (navigationEffect) {
+      is NavigationEffect.NavigateListActivity -> {
+        Intent(this, FragmentContainerActivity::class.java).apply {
+          startActivity(this)
+        }
+      }
+    }
   }
 }
 

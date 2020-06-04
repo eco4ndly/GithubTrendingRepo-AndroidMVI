@@ -26,6 +26,20 @@ fun View.visible() {
 }
 
 /**
+ * Hide depending upon a condition
+ */
+inline fun <T : View> T.hideIf(condition: (T) -> Boolean): T {
+  visibility = if (condition(this)) {
+    View.GONE
+  } else {
+    View.VISIBLE
+  }
+
+  return this
+}
+
+
+/**
  * shows an alert dialog with a messag
  */
 fun Fragment.showMessageDialog(message: String) {

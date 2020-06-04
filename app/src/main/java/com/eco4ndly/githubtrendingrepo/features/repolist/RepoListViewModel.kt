@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -20,10 +21,9 @@ class RepoListViewModel(
 
 
   init {
-    viewModelScope.launch {
-      viewIntent()
-        .toState()
-    }
+    viewIntent()
+      .toState()
+      .launchIn(viewModelScope)
   }
 
   private fun Flow<RepoListIntent>.toState(): Flow<RepoListIntent> {
@@ -49,7 +49,7 @@ class RepoListViewModel(
                 }
                 is ApiResult.Loading -> newState {
                   copy(
-                    isLoadingList = true,
+                    isLoadingList = apiResult.isLoading,
                     hasError = false
                   )
                 }
