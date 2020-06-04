@@ -1,12 +1,15 @@
 package com.eco4ndly.githubtrendingrepo.common.extensions
 
 import android.content.Context
+import android.graphics.Color
 import android.widget.Toast
 import com.eco4ndly.githubtrendingrepo.data.entities.BuiltBy
 import com.eco4ndly.githubtrendingrepo.data.entities.RepoModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.mapper.RepoUiModelMapper
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.BuiltByUiModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 
 /**
  * A Sayan Porya code on 14/05/20
@@ -32,6 +35,13 @@ fun Context.toast(text: CharSequence) = Toast.makeText(this, text, Toast.LENGTH_
  * Maps [RepoModel] to [RepoUiModel]
  */
 fun RepoModel.mapAsUi(): RepoUiModel {
+  val colorVal = try {
+    Color.parseColor(languageColor)
+  } catch (e: IllegalArgumentException) {
+    Color.TRANSPARENT
+  } catch (e: NullPointerException) {
+    Color.TRANSPARENT
+  }
   return RepoUiModel(
     repoName = name ?: "",
     description = description ?: "",
@@ -39,6 +49,7 @@ fun RepoModel.mapAsUi(): RepoUiModel {
     avatar = avatar ?: "",
     starts = stars ?: 0,
     forks = forks ?: 0,
+    color = colorVal,
     builtBy = builtBy.mapAsUi()
   )
 }
@@ -47,7 +58,7 @@ fun RepoModel.mapAsUi(): RepoUiModel {
  * An extension on ArrayList of [BuiltBy] that
  * Maps List of [BuiltBy] as a list of [BuiltByUiModel]
  */
-fun ArrayList<BuiltBy>?.mapAsUi(): List<BuiltByUiModel> {
+fun List<BuiltBy>?.mapAsUi(): List<BuiltByUiModel> {
   if (this == null) return emptyList()
   return map {
     BuiltByUiModel(

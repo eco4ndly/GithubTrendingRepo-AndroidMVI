@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import java.io.IOException
+import kotlin.reflect.KClass
 
 /**
  * A Sayan Porya code on 2020-02-08
@@ -41,13 +42,12 @@ fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs(dispatcher: CoroutineDispatch
         false
       }
     }
-  }
-      .onStart { emit(ApiResult.Loading(isLoading = true)) }
-      .onCompletion { emit(ApiResult.Loading(isLoading = false)) }
-      .catch { exception ->
-          Timber.e(exception)
-          emit(ApiResult.Error(exception))
-      }
+  }.onStart { emit(ApiResult.Loading(isLoading = true)) }
+    .onCompletion { emit(ApiResult.Loading(isLoading = false)) }
+    .catch { exception ->
+      Timber.e(exception)
+      emit(ApiResult.Error(exception))
+    }
     .flowOn(dispatcher)
 
 /**
@@ -62,13 +62,13 @@ fun Job?.cancelIfActive() {
 /**
  * **How to use it**
  * @code
-   private val mainScope = MainScope()
-   val btnClick: Button = findViewById(R.id.btn)
-   btnClick.clicks()
-            .onEach {
-                //DO STUFF ON CLICK
-            }
-            .launchIn(mainScope)
+private val mainScope = MainScope()
+val btnClick: Button = findViewById(R.id.btn)
+btnClick.clicks()
+.onEach {
+//DO STUFF ON CLICK
+}
+.launchIn(mainScope)
  */
 @ExperimentalCoroutinesApi
 fun View.clicks(): Flow<Unit> = callbackFlow {
@@ -114,4 +114,10 @@ fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
 } catch (t: Throwable) {
   // Ignore all
   false
+}
+
+inline fun <reified T> Flow<*>.ofType(): Flow<*> {
+  return takeWhile {
+    it is T
+  }
 }

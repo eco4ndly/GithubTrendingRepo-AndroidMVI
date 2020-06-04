@@ -10,22 +10,22 @@
       android:id="@+id/et_text"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:hint="@string/type_anything"
+      android:maxLines="1"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      android:layout_margin="8dp"
-      android:maxLines="1"
-      android:hint="@string/type_anything"
       />
   <TextView
       android:id="@+id/tv_char_count"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      tools:text="@string/count"
-      app:layout_constraintTop_toBottomOf="@id/et_text"
-      app:layout_constraintStart_toStartOf="@id/et_text"
-      app:layout_constraintEnd_toEndOf="@id/et_text"
       android:layout_margin="4dp"
+      app:layout_constraintEnd_toEndOf="@id/et_text"
+      app:layout_constraintStart_toStartOf="@id/et_text"
+      app:layout_constraintTop_toBottomOf="@id/et_text"
+      tools:text="@string/count"
       />
 
   <TextView
@@ -39,5 +39,33 @@
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       />
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      >
+    <Button
+        android:id="@+id/accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept"
+        />
+    <Button
+        android:id="@+id/reject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reject"
+        />
+    <Button
+        android:id="@+id/btn_list_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List Activity"
+        />
+  </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

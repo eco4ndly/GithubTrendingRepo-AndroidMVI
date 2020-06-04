@@ -12,7 +12,7 @@ data class RepoModel(
   @field:Json(name = "avatar")
   val avatar: String?,
   @field:Json(name = "builtBy")
-  val builtBy: ArrayList<BuiltBy>?,
+  val builtBy: List<BuiltBy>?,
   @field:Json(name = "currentPeriodStars")
   val currentPeriodStars: Int?,
   @field:Json(name = "description")

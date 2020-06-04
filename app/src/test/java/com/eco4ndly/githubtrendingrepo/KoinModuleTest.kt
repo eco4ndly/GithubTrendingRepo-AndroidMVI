@@ -1,6 +1,7 @@
 package com.eco4ndly.githubtrendingrepo
 
 import com.eco4ndly.githubtrendingrepo.di.modules.networkModule
+import com.eco4ndly.githubtrendingrepo.features.repolist.di.repoListFragmentModule
 import com.eco4ndly.githubtrendingrepo.main.module.mainActivityModule
 import org.junit.Test
 import org.koin.dsl.koinApplication
@@ -17,7 +18,7 @@ class KoinModuleTest: AutoCloseKoinTest() {
     fun `koin module test`() {
         koinApplication {
             printLogger(Level.DEBUG)
-            modules(listOf(networkModule, mainActivityModule))
+            modules(listOf(networkModule, mainActivityModule, repoListFragmentModule))
         }.checkModules()
     }
 }
