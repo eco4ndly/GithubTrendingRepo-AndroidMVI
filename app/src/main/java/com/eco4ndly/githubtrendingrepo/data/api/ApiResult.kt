@@ -16,7 +16,8 @@ sealed class ApiResult<out T: Any> {
    */
   data class Error(
     val exception: Throwable,
-    val message: String = exception.message?: ErrorHandler.UNKNOWN_ERROR
+    val message: String,
+    val errorCode: Int = 0
   ): ApiResult<Nothing>()
 
   /**

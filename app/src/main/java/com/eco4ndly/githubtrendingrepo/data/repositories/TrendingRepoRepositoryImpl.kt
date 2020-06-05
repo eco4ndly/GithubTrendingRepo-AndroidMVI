@@ -8,6 +8,7 @@ import com.eco4ndly.githubtrendingrepo.domain.data.TrendingRepoRepository
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withTimeout
 
 /**
  * Trending list repository implementation
@@ -16,7 +17,9 @@ class TrendingRepoRepositoryImpl(private val webService: WebService) :
   TrendingRepoRepository {
     override suspend fun getTrendingRepositoryList(): Flow<ApiResult<List<RepoUiModel>>> {
         return flow {
-          emit(ApiResult.Success(webService.getTrendingRepos().map()))
+          withTimeout(10000L) {
+            emit(ApiResult.Success(webService.getTrendingRepos().map()))
+          }
         }.applyCommonStuffs()
     }
 }

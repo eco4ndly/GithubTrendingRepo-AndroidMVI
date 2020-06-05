@@ -7,17 +7,20 @@ import android.widget.EditText
 import androidx.annotation.CheckResult
 import com.eco4ndly.githubtrendingrepo.common.Utils
 import com.eco4ndly.githubtrendingrepo.data.api.ApiResult
+import com.eco4ndly.githubtrendingrepo.data.api.NetworkErrorMessages
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import timber.log.Timber
+import kotlinx.coroutines.withTimeout
+import retrofit2.HttpException
 import java.io.IOException
-import kotlin.reflect.KClass
+import java.lang.Exception
 
 /**
  * A Sayan Porya code on 2020-02-08
@@ -31,24 +34,51 @@ import kotlin.reflect.KClass
  *  - Emitting error at the end as exhaust
  */
 @ExperimentalCoroutinesApi
-fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs(dispatcher: CoroutineDispatcher = Dispatchers.IO) =
-  retryWhen { cause, attempt ->
-    when {
-      (cause is IOException && attempt < Utils.MAX_RETRIES) -> {
-        delay(Utils.getBackoffDelay(attempt))
-        true
-      }
-      else -> {
-        false
-      }
+suspend fun <T : Any> Flow<ApiResult<T>>.applyCommonStuffs(dispatcher: CoroutineDispatcher = Dispatchers.IO): Flow<ApiResult<T>> {
+
+  fun convertErrorBody(exception: HttpException): String? {
+    return try {
+      exception.response()?.errorBody()?.toString()
+    } catch (e: Exception) {
+      NetworkErrorMessages.UNKNOWN_ERROR
     }
-  }.onStart { emit(ApiResult.Loading(isLoading = true)) }
-    .onCompletion { emit(ApiResult.Loading(isLoading = false)) }
-    .catch { exception ->
-      Timber.e(exception)
-      emit(ApiResult.Error(exception))
-    }
-    .flowOn(dispatcher)
+  }
+  return withTimeout(10000L) {
+    retryWhen { cause, attempt ->
+      when {
+        (cause is IOException && attempt < Utils.MAX_RETRIES) -> {
+          delay(Utils.getBackoffDelay(attempt))
+          true
+        }
+        else -> {
+          false
+        }
+      }
+    }.onStart { emit(ApiResult.Loading(isLoading = true)) }
+      .onCompletion { emit(ApiResult.Loading(isLoading = false)) }
+      .catch { exception ->
+        when (exception) {
+          is TimeoutCancellationException -> {
+            emit(
+              ApiResult.Error(
+                exception,
+                NetworkErrorMessages.NETWORK_ERROR_TIMEOUT,
+                408
+              )
+            )
+          }
+          is IOException -> emit(ApiResult.Error(exception, NetworkErrorMessages.NETWORK_ERROR, 400))
+          is HttpException -> {
+            val code = exception.code()
+            val errorMessage = convertErrorBody(exception) ?: NetworkErrorMessages.UNKNOWN_ERROR
+            emit(ApiResult.Error(exception, errorMessage, code))
+          }
+          else -> emit(ApiResult.Error(exception, NetworkErrorMessages.UNKNOWN_ERROR))
+        }
+      }
+      .flowOn(dispatcher)
+  }
+}
 
 /**
  * Cancelling job if active
@@ -122,5 +152,5 @@ fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
 inline fun <reified T> Flow<Any>.ofType(): Flow<T> {
   return takeWhile {
     it is T
-  }.map { it as T}
+  }.map { it as T }
 }
