@@ -4,6 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.base.BaseViewModel
 import com.eco4ndly.githubtrendingrepo.data.api.ApiResult
 import com.eco4ndly.githubtrendingrepo.domain.data.TrendingRepoRepository
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect.NavigationEvent.NavigateToDetailsScreen
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListIntent.ListItemSelectionIntent
+import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListIntent.ProfilePicClickIntent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +58,11 @@ class RepoListViewModel(
                 }
               }
             }
+        }
+        is ListItemSelectionIntent -> {
+          dispatchViewEffect(NavigateToDetailsScreen(it.item))
+        }
+        is ProfilePicClickIntent -> {
         }
       }
     }

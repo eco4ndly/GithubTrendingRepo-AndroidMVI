@@ -116,8 +116,11 @@ fun <E> SendChannel<E>.safeOffer(value: E) = !isClosedForSend && try {
   false
 }
 
-inline fun <reified T> Flow<*>.ofType(): Flow<*> {
+/**
+ * Use this flow operator to allow only certain Type to flow
+ */
+inline fun <reified T> Flow<Any>.ofType(): Flow<T> {
   return takeWhile {
     it is T
-  }
+  }.map { it as T}
 }

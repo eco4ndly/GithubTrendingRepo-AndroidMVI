@@ -29,7 +29,11 @@ data class RepoListState(
 /**
  * Effects for [RepoListFragment]
  */
-sealed class RepoListEffect
+sealed class RepoListEffect {
+  sealed class NavigationEvent: RepoListEffect() {
+    data class NavigateToDetailsScreen(val repoUiModel: RepoUiModel): NavigationEvent()
+  }
+}
 
 /**
  * Intents od [RepoListFragment]
@@ -39,4 +43,11 @@ sealed class RepoListIntent {
    * Fetches the list of trending repository
    */
   object FetchTrendingRepo: RepoListIntent()
+
+  /**
+   * When user clicks on repo item from the list
+   */
+  data class ListItemSelectionIntent(val item: RepoUiModel): RepoListIntent()
+
+  data class ProfilePicClickIntent(val picUrl: String): RepoListIntent()
 }
