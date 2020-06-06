@@ -16,7 +16,18 @@ class FragmentContainerActivity : AppCompatActivity() {
 
     supportFragmentManager
       .beginTransaction()
-      .replace(R.id.fragment_container, RepoListFragment.newInstance(), RepoListFragment.TAG)
-      .commitAllowingStateLoss()
+      .add(R.id.fragment_container, RepoListFragment.newInstance(), RepoListFragment.TAG)
+      .commit()
+  }
+
+  override fun onBackPressed() {
+    supportFragmentManager.backStackEntryCount.let {
+      if (it > 0) {
+        supportFragmentManager.popBackStack()
+      } else {
+        super.onBackPressed()
+      }
+    }
+
   }
 }

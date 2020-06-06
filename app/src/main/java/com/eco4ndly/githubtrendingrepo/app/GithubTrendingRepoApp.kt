@@ -2,6 +2,7 @@ package com.eco4ndly.githubtrendingrepo.app
 
 import android.app.Application
 import com.eco4ndly.githubtrendingrepo.di.modules.networkModule
+import com.eco4ndly.githubtrendingrepo.features.repodetails.di.repoDetailsModule
 import com.eco4ndly.githubtrendingrepo.features.repolist.di.repoListFragmentModule
 import com.eco4ndly.githubtrendingrepo.main.module.mainActivityModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +28,7 @@ class GithubTrendingRepoApp: Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@GithubTrendingRepoApp)
-            modules(listOf(networkModule, mainActivityModule, repoListFragmentModule))
+            modules(listOf(networkModule, mainActivityModule, repoListFragmentModule, repoDetailsModule))
         }
     }
 }

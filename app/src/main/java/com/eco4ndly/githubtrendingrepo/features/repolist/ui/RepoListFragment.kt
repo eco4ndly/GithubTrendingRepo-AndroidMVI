@@ -9,6 +9,7 @@ import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
 import com.eco4ndly.githubtrendingrepo.common.extensions.showIf
 import com.eco4ndly.githubtrendingrepo.common.extensions.showMessageDialog
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsFragment
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect.NavigationEvent
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect.NavigationEvent.NavigateToDetailsScreen
@@ -74,11 +75,15 @@ class RepoListFragment :
   }
 
   override fun showViewEffect(viewEffect: RepoListEffect) {
-    when(viewEffect) {
+    when (viewEffect) {
       is NavigationEvent -> {
-        when(viewEffect) {
+        when (viewEffect) {
           is NavigateToDetailsScreen -> {
-            //TODO - Navigate to Details Screen
+            activity?.supportFragmentManager?.beginTransaction()?.add(
+              R.id.fragment_container,
+              RepoDetailsFragment.newInstance(viewEffect.repoUiModel),
+              RepoDetailsFragment.TAG
+            )?.commit()
           }
         }
       }
@@ -103,7 +108,7 @@ class RepoListFragment :
 
   private fun Flow<Event>.toIntent(): Flow<RepoListIntent> {
     return map {
-      when(it) {
+      when (it) {
         is ItemClicked -> ListItemSelectionIntent(it.repoUiModel)
         is ProfilePicClick -> ProfilePicClickIntent(it.picUrl)
       }
