@@ -1,9 +1,14 @@
 package com.eco4ndly.githubtrendingrepo.features.repodetails.ui
 
 import android.os.Bundle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
+import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
+import com.eco4ndly.githubtrendingrepo.features.repodetails.BuiltByListDiffUtilCallback
+import com.eco4ndly.githubtrendingrepo.features.repodetails.BuiltByListItem
+import com.eco4ndly.githubtrendingrepo.features.repodetails.Event
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.InitialDataIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect
@@ -11,7 +16,10 @@ import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewModel
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewState
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 import com.eco4ndly.githubtrendingrepo.infra.event.argument
-import kotlinx.android.synthetic.main.repo_details_fragment.text
+import com.eco4ndly.githubtrendingrepo.widgets.ItemAdapter
+import kotlinx.android.synthetic.main.repo_details_fragment.rv_built_by
+import kotlinx.android.synthetic.main.repo_details_fragment.tv_repo_details
+import kotlinx.android.synthetic.main.repo_details_fragment.tv_repo_name
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -28,6 +36,10 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
 
   private val initialDataIntent = ConflatedBroadcastChannel<RepoUiModel>()
   private var mRepoDetails: RepoUiModel by argument()
+
+  private val mBuiltByListAdapter: ItemAdapter<BuiltByListItem, Event> by lazy {
+    ItemAdapter(BuiltByListDiffUtilCallback())
+  }
 
   companion object {
     const val TAG = "RepoDetailsFragment"
@@ -47,8 +59,6 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
 
   override fun takeOff(savedInstanceState: Bundle?) {
     initialDataIntent.safeOffer(mRepoDetails)
-
-    text.text = mRepoDetails.description
   }
 
   override fun showViewEffect(viewEffect: RepoDetailsViewEffect) {
@@ -56,7 +66,17 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
   }
 
   override fun renderViewState(viewState: RepoDetailsViewState) {
+    viewState.repoUiModel?.let {
+      tv_repo_name.text = it.repoName
+      tv_repo_details.text = it.description
+      rv_built_by.apply {
+        adapter = mBuiltByListAdapter
+        layoutManager = GridLayoutManager(context, 2)
+        setHasFixedSize(true)
+      }
 
+      mBuiltByListAdapter.submitList(BuiltByListItem.mapAsListItem(it.builtBy))
+    }
   }
 
   override fun viewIntent(): Flow<RepoDetailsIntent> {

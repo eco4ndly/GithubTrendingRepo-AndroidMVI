@@ -9,7 +9,7 @@ import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
 import com.eco4ndly.githubtrendingrepo.common.extensions.showIf
 import com.eco4ndly.githubtrendingrepo.common.extensions.showMessageDialog
-import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsFragment
+import com.eco4ndly.githubtrendingrepo.features.repodetails.ui.RepoDetailsFragment
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect.NavigationEvent
 import com.eco4ndly.githubtrendingrepo.features.repolist.RepoListEffect.NavigationEvent.NavigateToDetailsScreen
