@@ -1,9 +1,14 @@
-package com.eco4ndly.githubtrendingrepo.features.repodetails
+package com.eco4ndly.githubtrendingrepo.features.repodetails.ui
 
 import android.os.Bundle
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.InitialDataIntent
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewModel
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewState
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 import com.eco4ndly.githubtrendingrepo.infra.event.argument
 import kotlinx.android.synthetic.main.repo_details_fragment.text
@@ -27,13 +32,16 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
   companion object {
     const val TAG = "RepoDetailsFragment"
     fun newInstance(repoDetails: RepoUiModel): RepoDetailsFragment {
-      return RepoDetailsFragment().apply {
+      return RepoDetailsFragment()
+        .apply {
         mRepoDetails = repoDetails
       }
     }
   }
 
-  override val viewModel: RepoDetailsViewModel by viewModel { parametersOf(RepoDetailsViewState.initial) }
+  override val viewModel: RepoDetailsViewModel by viewModel { parametersOf(
+    RepoDetailsViewState.initial
+  ) }
 
   override fun layoutResId(): Int = R.layout.repo_details_fragment
 
@@ -52,7 +60,11 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
   }
 
   override fun viewIntent(): Flow<RepoDetailsIntent> {
-    val intents = listOf(initialDataIntent.asFlow().map { RepoDetailsIntent.InitialDataIntent(it) })
+    val intents = listOf(initialDataIntent.asFlow().map {
+      InitialDataIntent(
+        it
+      )
+    })
 
     return intents.asFlow().flattenMerge(intents.size)
   }
