@@ -1,17 +1,22 @@
 package com.eco4ndly.githubtrendingrepo.common.extensions
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.webkit.URLUtil
 import android.widget.Toast
 import com.eco4ndly.githubtrendingrepo.data.entities.BuiltBy
 import com.eco4ndly.githubtrendingrepo.data.entities.RepoModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.mapper.RepoUiModelMapper
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.BuiltByUiModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
+import java.net.MalformedURLException
 
 /**
  * A Sayan Porya code on 14/05/20
@@ -79,7 +84,7 @@ suspend fun List<RepoModel>.map(): List<RepoUiModel> {
 }
 
 /**
- *
+ * Helper method for bundle
  */
 fun <T> Bundle.put(key: String, value: T) {
   when (value) {
@@ -98,5 +103,23 @@ fun <T> Bundle.put(key: String, value: T) {
     is Parcelable -> putParcelable(key, value)
     is java.io.Serializable -> putSerializable(key, value)
     else -> throw IllegalStateException("Type of property $key is not supported")
+  }
+}
+
+/**
+ * If provided string is url, will open a browser else execute the provided function
+ */
+fun String.ifUrlOpenBrowserElse(context: Context, urlExpected: String, action : () -> Unit) {
+  if (URLUtil.isValidUrl(urlExpected)) {
+    try {
+      Intent(Intent.ACTION_VIEW, Uri.parse(urlExpected)).apply {
+        context.startActivity(this)
+      }
+    } catch (e: MalformedURLException) {
+      Timber.e(e)
+      action()
+    }
+  } else {
+    action()
   }
 }
