@@ -1,17 +1,21 @@
 package com.eco4ndly.githubtrendingrepo.features.repodetails.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
+import com.eco4ndly.githubtrendingrepo.common.extensions.ifUrlOpenBrowserElse
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
 import com.eco4ndly.githubtrendingrepo.features.repodetails.BuiltByListDiffUtilCallback
 import com.eco4ndly.githubtrendingrepo.features.repodetails.BuiltByListItem
 import com.eco4ndly.githubtrendingrepo.features.repodetails.Event
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.BuiltByListItemClickIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.InitialDataIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect.OpenWebBrowser
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewModel
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewState
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
@@ -27,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -62,7 +67,13 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
   }
 
   override fun showViewEffect(viewEffect: RepoDetailsViewEffect) {
-
+    when(viewEffect) {
+      is OpenWebBrowser -> {
+        viewEffect.url.ifUrlOpenBrowserElse(context) {
+          Toast.makeText( context, "Not an valid url", Toast.LENGTH_SHORT).show()
+        }
+      }
+    }
   }
 
   override fun renderViewState(viewState: RepoDetailsViewState) {
@@ -80,13 +91,20 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
   }
 
   override fun viewIntent(): Flow<RepoDetailsIntent> {
-    val intents = listOf(initialDataIntent.asFlow().map {
-      InitialDataIntent(
-        it
-      )
-    })
+    val intents = listOf(
+      initialDataIntent.asFlow().map { InitialDataIntent(it) },
+      mBuiltByListAdapter.eventFlow.toIntent()
+    )
 
     return intents.asFlow().flattenMerge(intents.size)
+  }
+
+  private fun Flow<Event>.toIntent(): Flow<RepoDetailsIntent> {
+    return map {
+      when(it) {
+        is Event.ItemClicked -> BuiltByListItemClickIntent(it.builtBy)
+      }
+    }
   }
 
 }

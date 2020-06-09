@@ -109,11 +109,11 @@ fun <T> Bundle.put(key: String, value: T) {
 /**
  * If provided string is url, will open a browser else execute the provided function
  */
-fun String.ifUrlOpenBrowserElse(context: Context, urlExpected: String, action : () -> Unit) {
-  if (URLUtil.isValidUrl(urlExpected)) {
+fun String.ifUrlOpenBrowserElse(context: Context?, action : () -> Unit) {
+  if (URLUtil.isValidUrl(this)) {
     try {
-      Intent(Intent.ACTION_VIEW, Uri.parse(urlExpected)).apply {
-        context.startActivity(this)
+      Intent(Intent.ACTION_VIEW, Uri.parse(this)).apply {
+        context?.startActivity(this)
       }
     } catch (e: MalformedURLException) {
       Timber.e(e)

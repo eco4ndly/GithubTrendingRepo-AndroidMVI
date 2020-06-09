@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import com.eco4ndly.githubtrendingrepo.R
+import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.BuiltByUiModel
 import com.eco4ndly.githubtrendingrepo.widgets.ItemAdapter
 import com.eco4ndly.githubtrendingrepo.widgets.ItemViewHolder
@@ -29,6 +30,10 @@ data class BuiltByListItem(val builtBy: BuiltByUiModel): ItemAdapter.Item<Event>
       placeholder(R.drawable.ic_image_ph_50dp)
       transformations(CircleCropTransformation())
       error(R.drawable.ic_broken_image_50dp)
+    }
+
+    holder.itemView.setOnClickListener {
+      channel.safeOffer(Event.ItemClicked(builtBy))
     }
   }
 

@@ -25,6 +25,9 @@ class RepoDetailsViewModel(initialState: RepoDetailsViewState) :
         is RepoDetailsIntent.InitialDataIntent -> newState {
           copy(repoUiModel = it.repoUiModel)
         }
+        is RepoDetailsIntent.BuiltByListItemClickIntent -> {
+          dispatchViewEffect(RepoDetailsViewEffect.OpenWebBrowser(it.builtByUiModel.profileLink))
+        }
       }
     }
   }
