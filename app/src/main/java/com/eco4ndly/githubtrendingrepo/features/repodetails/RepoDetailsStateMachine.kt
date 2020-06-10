@@ -20,6 +20,11 @@ sealed class RepoDetailsIntent {
    * When built by list item is clicked
    */
   data class BuiltByListItemClickIntent(val builtByUiModel: BuiltByUiModel): RepoDetailsIntent()
+
+  /**
+   * To open the repo in external browser
+   */
+  object OpenRepoInBrowserRequestIntent: RepoDetailsIntent()
 }
 
 /**

@@ -16,6 +16,7 @@ data class RepoUiModel(
   val starts: Int,
   val forks: Int,
   val color: Int,
+  val url: String,
   val builtBy: List<BuiltByUiModel>
 ): Parcelable
 

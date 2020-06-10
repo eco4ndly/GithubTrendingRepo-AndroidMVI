@@ -2,6 +2,8 @@ package com.eco4ndly.githubtrendingrepo.features.repodetails
 
 import androidx.lifecycle.viewModelScope
 import com.eco4ndly.githubtrendingrepo.base.BaseViewModel
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.OpenRepoInBrowserRequestIntent
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect.OpenWebBrowser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +29,11 @@ class RepoDetailsViewModel(initialState: RepoDetailsViewState) :
         }
         is RepoDetailsIntent.BuiltByListItemClickIntent -> {
           dispatchViewEffect(RepoDetailsViewEffect.OpenWebBrowser(it.builtByUiModel.profileLink))
+        }
+        is OpenRepoInBrowserRequestIntent -> {
+          viewState.value?.repoUiModel?.url?.let { url ->
+            dispatchViewEffect(OpenWebBrowser(url))
+          }
         }
       }
     }

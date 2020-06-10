@@ -57,6 +57,7 @@ fun RepoModel.mapAsUi(): RepoUiModel {
     starts = stars ?: 0,
     forks = forks ?: 0,
     color = colorVal,
+    url = url?:"",
     builtBy = builtBy.mapAsUi()
   )
 }

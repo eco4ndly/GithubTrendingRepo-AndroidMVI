@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
+import com.eco4ndly.githubtrendingrepo.common.extensions.clicks
 import com.eco4ndly.githubtrendingrepo.common.extensions.ifUrlOpenBrowserElse
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
@@ -14,6 +15,7 @@ import com.eco4ndly.githubtrendingrepo.features.repodetails.Event
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.BuiltByListItemClickIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.InitialDataIntent
+import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsIntent.OpenRepoInBrowserRequestIntent
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewEffect.OpenWebBrowser
 import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewModel
@@ -21,6 +23,7 @@ import com.eco4ndly.githubtrendingrepo.features.repodetails.RepoDetailsViewState
 import com.eco4ndly.githubtrendingrepo.features.repolist.model.RepoUiModel
 import com.eco4ndly.githubtrendingrepo.infra.event.argument
 import com.eco4ndly.githubtrendingrepo.widgets.ItemAdapter
+import kotlinx.android.synthetic.main.repo_details_fragment.iv_open_repo_in_browser
 import kotlinx.android.synthetic.main.repo_details_fragment.rv_built_by
 import kotlinx.android.synthetic.main.repo_details_fragment.tv_repo_details
 import kotlinx.android.synthetic.main.repo_details_fragment.tv_repo_name
@@ -93,7 +96,8 @@ class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEf
   override fun viewIntent(): Flow<RepoDetailsIntent> {
     val intents = listOf(
       initialDataIntent.asFlow().map { InitialDataIntent(it) },
-      mBuiltByListAdapter.eventFlow.toIntent()
+      mBuiltByListAdapter.eventFlow.toIntent(),
+      iv_open_repo_in_browser.clicks().map { OpenRepoInBrowserRequestIntent }
     )
 
     return intents.asFlow().flattenMerge(intents.size)
