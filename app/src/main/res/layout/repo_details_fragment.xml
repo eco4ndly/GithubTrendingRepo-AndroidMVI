@@ -17,29 +17,45 @@
       app:layout_constraintVertical_bias="0"
       />
 
-  <TextView
-      android:id="@+id/tv_repo_name"
-      android:layout_width="wrap_content"
+  <LinearLayout
+      android:id="@+id/ll_title_container"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:textColor="@android:color/white"
-      android:textSize="28sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      tools:text="Repo Name"
-      app:layout_constraintHorizontal_bias="0"
       android:layout_marginStart="10dp"
       android:layout_marginEnd="10dp"
       android:layout_marginTop="20dp"
-      android:fontFamily="@font/roboto_bold"
-      />
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      >
+    <TextView
+        android:id="@+id/tv_repo_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        tools:text="Repo Name"
+        android:fontFamily="@font/roboto_bold"
+        />
+    <ImageView
+        android:id="@+id/iv_open_repo_in_browser"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_open_in_new_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        />
+  </LinearLayout>
+
   <TextView
       android:id="@+id/tv_repo_details"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      app:layout_constraintTop_toBottomOf="@id/tv_repo_name"
-      app:layout_constraintStart_toStartOf="@id/tv_repo_name"
-      app:layout_constraintEnd_toEndOf="@id/tv_repo_name"
+      app:layout_constraintTop_toBottomOf="@id/ll_title_container"
+      app:layout_constraintStart_toStartOf="@id/ll_title_container"
+      app:layout_constraintEnd_toEndOf="@id/ll_title_container"
       android:layout_marginTop="5dp"
       tools:text="Repo Details"
       android:textColor="@color/gray_light"
