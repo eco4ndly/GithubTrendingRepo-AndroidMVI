@@ -4,6 +4,7 @@ import android.os.Bundle
 
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
+import com.eco4ndly.githubtrendingrepo.common.extensions.addFragment
 import com.eco4ndly.githubtrendingrepo.common.extensions.gone
 import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
@@ -83,11 +84,11 @@ class RepoListFragment :
       is NavigationEvent -> {
         when (viewEffect) {
           is NavigateToDetailsScreen -> {
-            activity?.supportFragmentManager?.beginTransaction()?.add(
+            activity.addFragment(
               R.id.fragment_container,
               RepoDetailsFragment.newInstance(viewEffect.repoUiModel),
               RepoDetailsFragment.TAG
-            )?.commit()
+            )
           }
         }
       }

@@ -1,5 +1,6 @@
 package com.eco4ndly.githubtrendingrepo.common.extensions
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -8,6 +9,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.webkit.URLUtil
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.eco4ndly.githubtrendingrepo.data.entities.BuiltBy
 import com.eco4ndly.githubtrendingrepo.data.entities.RepoModel
 import com.eco4ndly.githubtrendingrepo.features.repolist.mapper.RepoUiModelMapper
@@ -122,5 +125,27 @@ fun String.ifUrlOpenBrowserElse(context: Context?, action : () -> Unit) {
     }
   } else {
     action()
+  }
+}
+
+fun FragmentActivity?.addFragment(
+  containerId: Int,
+  fragment: Fragment,
+  tag: String,
+  doReplace: Boolean = false,
+  addToBackStack: Boolean = true,
+  backStackName: String? = null) {
+  this?.supportFragmentManager?.beginTransaction()?.apply {
+    if (doReplace) {
+      replace(containerId, fragment, tag)
+    } else {
+      add(containerId, fragment, tag)
+    }
+
+    if (addToBackStack) {
+      addToBackStack(backStackName)
+    }
+
+    commit()
   }
 }
