@@ -54,6 +54,10 @@ sealed class RepositoryListItem: ItemAdapter.Item<RepositoryListItem.Event> {
      */
     data class ItemClicked(val repoUiModel: RepoUiModel): Event()
 
+    /**
+     * Event from repository list adapter to the ui, when user clicks on the avatar pic
+     * in the list item
+     */
     data class ProfilePicClick(val picUrl: String): Event()
   }
 }

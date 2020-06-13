@@ -52,6 +52,10 @@ class RepoListFragment :
 
   companion object {
     const val TAG = "RepoListFragment"
+
+    /**
+     * Use this method to get the instance of this fragment
+     */
     fun newInstance() =
       RepoListFragment()
   }

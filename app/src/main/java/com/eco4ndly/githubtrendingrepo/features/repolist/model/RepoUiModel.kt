@@ -1,11 +1,12 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist.model
 
-import android.graphics.Color
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 /**
  * A Sayan Porya code on 24/05/20
+ *
+ * UI compatable data for repo item
  */
 @Parcelize
 data class RepoUiModel(

@@ -9,7 +9,6 @@ import kotlin.reflect.KProperty
 /**
  * A Sayan Porya code on 05/06/20
  */
-
 class FragmentArgumentDelegate<T: Any>: ReadWriteProperty<Fragment, T> {
 
   @Suppress("UNCHECKED_CAST")
