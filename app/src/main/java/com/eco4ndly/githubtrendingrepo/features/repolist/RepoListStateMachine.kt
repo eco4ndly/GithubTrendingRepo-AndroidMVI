@@ -49,5 +49,8 @@ sealed class RepoListIntent {
    */
   data class ListItemSelectionIntent(val item: RepoUiModel): RepoListIntent()
 
+  /**
+   * When user clicks on the avatar in the repo list item
+   */
   data class ProfilePicClickIntent(val picUrl: String): RepoListIntent()
 }

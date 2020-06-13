@@ -38,6 +38,11 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
+/**
+ * Fragment to show the repository details.
+ * When user clicks on repo item in [RepoListFragment], we redirect him in here with
+ * the repo information.
+ */
 @FlowPreview
 @ExperimentalCoroutinesApi
 class RepoDetailsFragment : BaseFragment<RepoDetailsViewState, RepoDetailsViewEffect, RepoDetailsIntent, RepoDetailsViewModel>() {
