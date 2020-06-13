@@ -7,6 +7,9 @@ import com.eco4ndly.githubtrendingrepo.features.repolist.ui.RepoListFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
+/**
+ * We'll be using this activity to contain all our fragments
+ */
 @FlowPreview
 @ExperimentalCoroutinesApi
 class FragmentContainerActivity : AppCompatActivity() {

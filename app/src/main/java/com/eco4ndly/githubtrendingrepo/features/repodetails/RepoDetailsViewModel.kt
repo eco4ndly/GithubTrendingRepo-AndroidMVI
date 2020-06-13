@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * Viewmodel for [com.eco4ndly.githubtrendingrepo.features.repodetails.ui.RepoDetailsFragment]
+ */
 @ExperimentalCoroutinesApi
 @FlowPreview
 class RepoDetailsViewModel(initialState: RepoDetailsViewState) :
