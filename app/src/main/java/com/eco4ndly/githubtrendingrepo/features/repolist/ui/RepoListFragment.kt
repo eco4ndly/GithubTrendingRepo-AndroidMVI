@@ -1,12 +1,10 @@
 package com.eco4ndly.githubtrendingrepo.features.repolist.ui
 
 import android.os.Bundle
-
 import com.eco4ndly.githubtrendingrepo.R
 import com.eco4ndly.githubtrendingrepo.base.BaseFragment
 import com.eco4ndly.githubtrendingrepo.common.extensions.addFragment
 import com.eco4ndly.githubtrendingrepo.common.extensions.gone
-import com.eco4ndly.githubtrendingrepo.common.extensions.safeOffer
 import com.eco4ndly.githubtrendingrepo.common.extensions.setUpBasicList
 import com.eco4ndly.githubtrendingrepo.common.extensions.showIf
 import com.eco4ndly.githubtrendingrepo.common.extensions.showMessageDialog
@@ -30,8 +28,8 @@ import kotlinx.android.synthetic.main.repo_list_fragment.pb_list_load
 import kotlinx.android.synthetic.main.repo_list_fragment.rv_repo_list
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.map
@@ -49,7 +47,7 @@ class RepoListFragment :
     )
   }
 
-  private val repoListFetchIntent = ConflatedBroadcastChannel<Unit>()
+  private val repoListFetchIntent = MutableStateFlow(Unit)
 
   companion object {
     const val TAG = "RepoListFragment"
@@ -100,12 +98,12 @@ class RepoListFragment :
   override fun takeOff(savedInstanceState: Bundle?) {
     pb_list_load.gone()
     rv_repo_list.setUpBasicList(repoListAdapter)
-    repoListFetchIntent.safeOffer(Unit)
+    repoListFetchIntent.value = Unit
   }
 
   override fun viewIntent(): Flow<RepoListIntent> {
     val intents = listOf(
-      repoListFetchIntent.asFlow().map { FetchTrendingRepo },
+      repoListFetchIntent.map { FetchTrendingRepo },
       repoListAdapter.eventFlow.toIntent()
     )
     return intents.asFlow().flattenMerge(intents.size)
